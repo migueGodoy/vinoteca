@@ -1,0 +1,3 @@
+name = "vinoteca-api"
+main = "api/index.js"
+compatibility_date = "2023-01-18"
