@@ -1,0 +1,18 @@
+{
+  "name": "vinoteca",
+  "version": "1.0.0",
+  "description": "Proyecto vinoteca",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"No test\" && exit 0"
+  },
+  "author": "Migue Godoy",
+  "license": "ISC",
+  "devDependencies": {
+    "standard": "^17.0.0"
+  },
+  "eslintConfig": {
+    "extends": "standard"
+  }
+}
