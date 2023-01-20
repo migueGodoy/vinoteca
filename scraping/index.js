@@ -3,17 +3,17 @@ import path from 'node:path'
 
 const wines = []
 
-for (let i = 0; i < 94; i++) {
+for (let i = 0; i < 68; i++) {
   console.log('Starting i: ' + i)
   for (let j = 0; j < 10; j++) {
     console.log({ j })
-    const url = `https://www.vivino.com/api/explore/explore?order_by=discount_percent&order=desc&price_range_max=3000000&price_range_min=0&wine_type_ids%5B%5D=1&wine_type_ids%5B%5D=2&wine_type_ids%5B%5D=3&wine_type_ids%5B%5D=24&wine_type_ids%5B%5D=7&wine_type_ids%5B%5D=4&page=${i}${j}&language=es&per_page=50`
+    const url = `https://www.vivino.com/api/explore/explore?country_code=ES&currency_code=EUR&grape_filter=varietal&min_rating=1&order_by=discount_percent&order=desc&price_range_max=50000&price_range_min=0&wine_type_ids%5B%5D=1&wine_type_ids%5B%5D=2&wine_type_ids%5B%5D=7&page=${i}${j}&language=es&per_page=50`
     const winesPerPage = await fetch(url)
       .then(response => response.json())
       .then(data => data.explore_vintage.matches)
 
-    const winesWithOnlyInterestingProperties = winesPerPage.map(wine => (
-      {
+    const winesWithOnlyInterestingProperties = winesPerPage.map(wine => {
+      return {
         id: wine?.vintage?.wine?.id,
         name: wine?.vintage?.wine?.name,
         winery: wine?.vintage?.wine?.winery?.name,
@@ -26,7 +26,7 @@ for (let i = 0; i < 94; i++) {
         originalPrice: wine?.price?.discounted_from,
         currency: wine?.price?.currency?.code,
         volume: wine?.price?.bottle_type?.volume_ml,
-        grapes: wine?.vintage?.wine?.region?.country?.most_used_grapes?.map(grape => (
+        grapes: wine?.vintage?.wine?.style?.grapes?.map(grape => (
           {
             id: grape?.id,
             name: grape?.name
@@ -41,11 +41,14 @@ for (let i = 0; i < 94; i++) {
           userStructureCount: wine?.vintage?.wine?.taste?.structure?.calculated_structure_count
         }
       }
-    ))
+    })
 
     wines.push(...winesWithOnlyInterestingProperties)
   }
 }
 
+const winesWithoutDuplicates = Array.from(new Set(wines.map(wine => wine.id)))
+  .map(id => wines.find(a => a.id === id))
+
 const filePath = path.join(process.cwd(), 'db', 'wines.json')
-await writeFile(filePath, JSON.stringify(wines, null, 2), 'utf-8')
+await writeFile(filePath, JSON.stringify(winesWithoutDuplicates, null, 2), 'utf-8')
