@@ -13,7 +13,7 @@ const wines = require('../db/wines.json')
 
 const allGrapes = []
 wines.forEach(wine => {
-  const { grapes, restOfWine } = wine
+  const { grapes } = wine
   if (grapes?.length) allGrapes.push(...grapes)
 })
 
