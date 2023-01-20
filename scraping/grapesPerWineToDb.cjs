@@ -12,7 +12,7 @@ connection.connect()
 
 const grapesPerWines = []
 wines.forEach(wine => {
-  const { id, grapes, ...restOfWine } = wine
+  const { grapes } = wine
   grapes?.forEach(grape => {
     const grapePerWine = {
       grape: grape.id,
