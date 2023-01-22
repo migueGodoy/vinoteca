@@ -1,15 +1,15 @@
-// import wines from '../db/wines.json' assert { type: "json" }
-// const mysql = require('mysql')
+const mysql = require('mysql')
 const wines = require('../db/wines.json')
+const dbConfig = require('./config/dbConnection.json')
 
-// const connection = mysql.createConnection({
-//   host: 'sql11.freemysqlhosting.net',
-//   user: 'sql11591990',
-//   password: 'kblNu74VZd',
-//   database: 'sql11591990'
-// })
+const connection = mysql.createConnection({
+  host: dbConfig.server,
+  user: dbConfig.user,
+  password: dbConfig.password,
+  database: dbConfig.database
+})
 
-// connection.connect()
+connection.connect()
 
 const allGrapes = []
 wines.forEach(wine => {
@@ -26,4 +26,3 @@ grapesWithoutDuplicates.sort((a, b) => a.id - b.id)
 //     if (error) console.log(error)
 //   })
 // })
-console.log(grapesWithoutDuplicates)

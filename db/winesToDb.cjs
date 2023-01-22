@@ -1,11 +1,12 @@
 const mysql = require('mysql')
 const wines = require('./wines.json')
+const dbConfig = require('./config/dbConnection.json')
 
 const connection = mysql.createConnection({
-  host: 'sql11.freemysqlhosting.net',
-  user: 'sql11591990',
-  password: 'kblNu74VZd',
-  database: 'sql11591990'
+  host: dbConfig.server,
+  user: dbConfig.user,
+  password: dbConfig.password,
+  database: dbConfig.database
 })
 
 connection.connect()
@@ -24,8 +25,8 @@ wines.forEach(wine => {
   winesWithFlatTaste.push(wineWithFlatTaste)
 })
 
-winesWithFlatTaste.forEach(wine => {
-  connection.query('INSERT INTO wines SET ?', wine, function (error, results, fields) {
-    if (error) console.log(error)
-  })
-})
+// winesWithFlatTaste.forEach(wine => {
+//   connection.query('INSERT INTO wines SET ?', wine, function (error, results, fields) {
+//     if (error) console.log(error)
+//   })
+// })

@@ -1,11 +1,12 @@
 const mysql = require('mysql')
 const wines = require('../db/wines.json')
+const dbConfig = require('./config/dbConnection.json')
 
 const connection = mysql.createConnection({
-  host: 'sql11.freemysqlhosting.net',
-  user: 'sql11591990',
-  password: 'kblNu74VZd',
-  database: 'sql11591990'
+  host: dbConfig.server,
+  user: dbConfig.user,
+  password: dbConfig.password,
+  database: dbConfig.database
 })
 
 connection.connect()
