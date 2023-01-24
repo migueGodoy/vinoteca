@@ -19,8 +19,8 @@ jobs:
       - uses: npm/action-setup@v2
         with:
           version: 7.18.2
-          run_install_: true
-      - uses: cloudflare/wrangler-action@v2.0.0
+          run_install: true
+      - uses: cloudflare/wrangler-action@2.0.0
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           workingDirectory: api
