@@ -14,6 +14,10 @@ app.get('/', ctx => {
       {
         url: '/grapes',
         description: 'get all grapes'
+      },
+      {
+        url: '/invent',
+        description: 'me lo invent'
       }
     ]
   })
