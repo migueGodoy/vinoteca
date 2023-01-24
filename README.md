@@ -16,3 +16,9 @@ Los endpoints disponibles son:
   `npm run dev:api`
 
   `npm run publsih:api`
+
+## Estadísticas Acerca del Autor
+
+<p>&nbsp;<img align="center" src="https://jordinodejs.vercel.app/api?username=migueGodoy&show_icons=true&locale=es&theme=calm" alt="midudev" /></p>
+
+<p><img align="left" src="https://jordinodejs.vercel.app/api/top-langs?username=migueGodoy&show_icons=true&locale=es&layout=compact&theme=calm&langs_count=8&hide=php,coffeescript" alt="midudev" /></p>
