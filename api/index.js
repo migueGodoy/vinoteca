@@ -1,5 +1,6 @@
 import { Hono } from 'hono'
 import wines from '../db/wines.json'
+import grapes from '../src/grapes'
 
 const app = new Hono()
 
@@ -20,17 +21,6 @@ app.get('/', ctx => {
 
 app.get('/wines', ctx => ctx.json(wines))
 
-app.get('/grapes', ctx => {
-  const allGrapes = []
-  wines.forEach(wine => {
-    const { grapes } = wine
-    if (grapes?.length) allGrapes.push(...grapes)
-  })
-
-  const grapesWithoutDuplicatesAndSorted = Array.from(new Set(allGrapes.map(grape => grape.id)))
-    .map(id => allGrapes.find(a => a.id === id)).sort((a, b) => a.id - b.id)
-
-  return ctx.json(grapesWithoutDuplicatesAndSorted)
-})
+app.get('/grapes', ctx => ctx.json(grapes()))
 
 export default app
