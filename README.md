@@ -1,7 +1,7 @@
 <div align="center">
 <h1> 🥂 Vinoteca Project 🍷</h1>
 
-<h2><a href='https://vinoteca-api.miguegodoy.workers.dev/'>API</a> | <a href='#'>WEB | TBD</a></h2>
+<h2><a href='https://vinoteca-api.miguegodoy.workers.dev/'>API</a> | WEB (TBD)</h2>
 </div>
 
   `npm run dev:api`
