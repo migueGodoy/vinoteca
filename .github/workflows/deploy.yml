@@ -1,0 +1,27 @@
+name: Deploy API
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-22.04
+    name: Deploy Vinoteca API to Cloudflare workers
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - uses: npm/action-setup@v2
+        with:
+          version: 7.18.2
+          run_install_: true
+      - uses: cloudflare/wrangler-action@v2.0.0
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          workingDirectory: api
+      
