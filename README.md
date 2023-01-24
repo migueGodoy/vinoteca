@@ -2,6 +2,6 @@
 
 https://vinoteca-api.miguegodoy.workers.dev/
 
-> npm run dev:api
+  npm run dev:api
 
-> npm run publsih:api
+  npm run publsih:api
