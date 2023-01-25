@@ -1,10 +1,10 @@
 import { Hono } from 'hono'
 import wines from '../db/wines.json'
-import grapes from '../src/grapes'
+import grapes from '../utils/grapes'
 
 const app = new Hono()
 
-app.get('/', ctx => {
+app.get('/', (ctx) => {
   return ctx.json({
     endpoints: [
       {
@@ -19,8 +19,8 @@ app.get('/', ctx => {
   })
 })
 
-app.get('/wines', ctx => ctx.json(wines))
+app.get('/wines', (ctx) => ctx.json(wines))
 
-app.get('/grapes', ctx => ctx.json(grapes()))
+app.get('/grapes', (ctx) => ctx.json(grapes()))
 
 export default app
