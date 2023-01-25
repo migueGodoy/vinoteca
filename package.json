@@ -5,21 +5,27 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "astro": "astro",
+    "build:web": "astro build",
     "dev:api": "wrangler dev api/index.js",
+    "dev:web": "astro dev",
+    "preview:web": "astro preview",
     "publish:api": "wrangler publish api/index.js",
+    "start:web": "astro dev",
     "test": "echo \"No test\" && exit 0"
   },
   "author": "Migue Godoy",
   "license": "ISC",
   "devDependencies": {
-    "standard": "^17.0.0",
-    "vitest": "^0.27.2",
-    "wrangler": "^2.8.0"
+    "standard": "17.0.0",
+    "vitest": "0.27.2",
+    "wrangler": "2.8.0"
   },
   "eslintConfig": {
     "extends": "standard"
   },
   "dependencies": {
+    "astro": "1.9.0",
     "hono": "2.7.3"
   }
 }
