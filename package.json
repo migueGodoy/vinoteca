@@ -23,7 +23,10 @@
     "wrangler": "2.8.0"
   },
   "eslintConfig": {
-    "extends": "standard"
+    "extends": "standard",
+    "rules": {
+      "space-before-function-paren":"off"
+    }
   },
   "dependencies": {
     "astro": "1.9.0",
