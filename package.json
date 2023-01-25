@@ -30,13 +30,15 @@
       "plugin:astro/recommended"
     ],
     "rules": {
-	  "no-tabs": "off",
-	  "no-unused-vars": "off",
+      "no-tabs": "off",
+      "no-unused-vars": "off",
       "space-before-function-paren": "off"
     },
     "overrides": [
       {
-        "files": ["*.astro"],
+        "files": [
+          "*.astro"
+        ],
         "parser": "astro-eslint-parser",
         "rules": {
           "astro/no-set-html-directive": "error"
@@ -45,7 +47,9 @@
     ]
   },
   "dependencies": {
-    "astro": "1.9.0",
-    "hono": "2.7.3"
+    "@astrojs/tailwind": "3.0.0",
+    "astro": "2.0.1",
+    "hono": "2.7.3",
+    "tailwindcss": "3.2.4"
   }
 }
