@@ -67,5 +67,5 @@ const writeWinesToFile = async (wines) => {
   await writeFile(filePath, JSON.stringify(wines, null, 2), 'utf-8')
 }
 
-const wines = await getWines(69) // 69
+const wines = await getWines(69) // 69 jaja
 writeWinesToFile(wines)
