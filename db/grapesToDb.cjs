@@ -1,5 +1,6 @@
 const mysql = require('mysql')
-const wines = require('../db/wines.json')
+const USWines = require('../db/data/US wines.json')
+const spainWines = require('../db/data/Spain wines.json')
 const dbConfig = require('./config/dbConnection.json')
 
 const connection = mysql.createConnection({
@@ -12,7 +13,12 @@ const connection = mysql.createConnection({
 connection.connect()
 
 const allGrapes = []
-wines.forEach((wine) => {
+USWines.forEach((wine) => {
+  const { grapes } = wine
+  if (grapes?.length) allGrapes.push(...grapes)
+})
+
+spainWines.forEach((wine) => {
   const { grapes } = wine
   if (grapes?.length) allGrapes.push(...grapes)
 })
@@ -22,8 +28,8 @@ const grapesWithoutDuplicates = Array.from(
 ).map((id) => allGrapes.find((a) => a.id === id))
 
 grapesWithoutDuplicates.sort((a, b) => a.id - b.id)
-// grapesWithoutDuplicates.forEach(grape => {
-//   connection.query('INSERT INTO grapes SET ?', grape, function (error, results, fields) {
-//     if (error) console.log(error)
-//   })
-// })
+grapesWithoutDuplicates.forEach(grape => {
+  connection.query('INSERT INTO grapes SET ?', grape, function (error, results, fields) {
+    if (error) console.log(error)
+  })
+})
