@@ -1,5 +1,6 @@
 const mysql = require('mysql')
-const wines = require('./wines.json')
+const USWines = require('./data/US wines.json')
+const spainWines = require('./data/Spain wines.json')
 const dbConfig = require('./config/dbConnection.json')
 
 const connection = mysql.createConnection({
@@ -12,21 +13,18 @@ const connection = mysql.createConnection({
 connection.connect()
 
 const winesWithFlatTaste = []
-wines.forEach(wine => {
-  const { grapes, ...restOfWine } = wine
-  const { taste, ...restWithoutTaste } = restOfWine
-  const wineWithFlatTaste = restWithoutTaste
-  wineWithFlatTaste.acidity = taste?.acidity
-  wineWithFlatTaste.fizziness = taste?.fizziness
-  wineWithFlatTaste.intensity = taste?.intensity
-  wineWithFlatTaste.sweetness = taste?.sweetness
-  wineWithFlatTaste.tannin = taste?.tannin
-  wineWithFlatTaste.userStructureCount = taste?.userStructureCount
-  winesWithFlatTaste.push(wineWithFlatTaste)
+USWines.forEach(wine => {
+  const { grapes, pageFrom, ...restOfWine } = wine
+  winesWithFlatTaste.push(restOfWine)
 })
 
-// winesWithFlatTaste.forEach(wine => {
-//   connection.query('INSERT INTO wines SET ?', wine, function (error, results, fields) {
-//     if (error) console.log(error)
-//   })
-// })
+spainWines.forEach(wine => {
+  const { grapes, pageFrom, ...restOfWine } = wine
+  winesWithFlatTaste.push(restOfWine)
+})
+
+winesWithFlatTaste.forEach(wine => {
+  connection.query('INSERT INTO wines SET ?', wine, function (error, results, fields) {
+    if (error) console.log(error)
+  })
+})
