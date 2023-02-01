@@ -1,16 +1,25 @@
-import { writeFile } from 'node:fs/promises'
-import path from 'node:path'
+const PRICE_INCREMENT = 20
 
-const getWines = async (pages) => {
+const getWines = async (endingPage, countryCode, currency, wineType, grape, price) => {
   const wines = []
-  for (let i = 0; i < pages; i++) {
-    console.log('Starting i: ' + i)
-    for (let j = 0; j <= 9; j++) {
-      console.log({ j })
-      const url = `https://www.vivino.com/api/explore/explore?country_code=ES&currency_code=EUR&min_rating=1&order_by=discount_percent&order=desc&price_range_max=50000&price_range_min=0&wine_type_ids%5B%5D=1&wine_type_ids%5B%5D=2&wine_type_ids%5B%5D=7&page=${i}${j}&language=es&per_page=50`
+  for (let i = 1; i <= endingPage; i++) {
+    try {
+      const url = `https://www.vivino.com/api/explore/explore?country_code=${countryCode}&currency_code=${currency}&min_rating=1&order_by=price&order=desc&price_range_max=${price + PRICE_INCREMENT}&price_range_min=${price}&wine_type_ids%5B%5D=${wineType}&grape_ids%5B%5D=${grape}&page=${i}&per_page=50&language=es`
       const winesPerPage = await fetch(url)
         .then(response => response.json())
-        .then(data => data.explore_vintage.matches)
+        .then(data => {
+          console.log({
+            page: i,
+            endingPage,
+            countryCode,
+            currency,
+            wineType,
+            grape,
+            price,
+            records: data.explore_vintage.records_matched
+          })
+          return data.explore_vintage.records
+        })
 
       const winesWithOnlyInterestingProperties = winesPerPage.map(wine => {
         return {
@@ -37,35 +46,71 @@ const getWines = async (pages) => {
               name: grape?.name
             }
           )),
-          taste: {
-            acidity: wine?.vintage?.wine?.taste?.structure?.acidity,
-            fizziness: wine?.vintage?.wine?.taste?.structure?.fizziness,
-            intensity: wine?.vintage?.wine?.taste?.structure?.intensity,
-            sweetness: wine?.vintage?.wine?.taste?.structure?.sweetness,
-            tannin: wine?.vintage?.wine?.taste?.structure?.tannin,
-            userStructureCount: wine?.vintage?.wine?.taste?.structure?.calculated_structure_count
-          },
-          pageFrom: `${i}${j}`
+          acidity: wine?.vintage?.wine?.taste?.structure?.acidity,
+          fizziness: wine?.vintage?.wine?.taste?.structure?.fizziness,
+          intensity: wine?.vintage?.wine?.taste?.structure?.intensity,
+          sweetness: wine?.vintage?.wine?.taste?.structure?.sweetness,
+          tannin: wine?.vintage?.wine?.taste?.structure?.tannin,
+          userStructureCount: wine?.vintage?.wine?.taste?.structure?.calculated_structure_count,
+          pageFrom: i
         }
       })
 
       wines.push(...winesWithOnlyInterestingProperties)
+    } catch (e) {
+      console.log(e)
     }
   }
 
   return wines
 }
 
-// const winesWithoutDuplicates = Array.from(new Set(wines.map(wine => wine.id)))
-//   .map(id => wines.find(a => a.id === id))
+(function(console) {
+  console.save = function(data, filename) {
+    if (!data) {
+      console.error('Console.save: No data')
+      return
+    }
+    if (!filename) filename = 'wines.json'
+    if (typeof data === 'object') {
+      data = JSON.stringify(data, undefined, 4)
+    }
+    const blob = new Blob([data], { type: 'text/json' })
+    const e = document.createEvent('MouseEvents')
+    const a = document.createElement('a')
+    a.download = filename
+    a.href = window.URL.createObjectURL(blob)
+    a.dataset.downloadurl = ['text/json', a.download, a.href].join(':')
+    e.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null)
+    a.dispatchEvent(e)
+  }
+})(console)
 
-// const filePath = path.join(process.cwd(), 'db', 'wines.json')
-// await writeFile(filePath, JSON.stringify(wines, null, 2), 'utf-8')
+const getWinesPerCountryAndCurrency = async (countryCode, currency) => {
+  console.log({ countryCode, currency })
+  const allFuckingUniqueWines = []
+  const allFuckingWines = []
+  const winesCountFilter = winesCount.filter(wine => wine.numberOfPages !== 0)
+  const winesCountMini = winesCountFilter// .slice(0, 2)
+  for (const wine of winesCountMini) {
+    console.log(wine)
+    const moreWines = await getWines(wine.numberOfPages, countryCode, currency, wine.wineType, wine.grape, wine.price)
+    allFuckingWines.push(...moreWines)
+    console.log(allFuckingWines.length)
+  }
 
-const writeWinesToFile = async (wines) => {
-  const filePath = path.join(process.cwd(), 'db', 'wines.json')
-  await writeFile(filePath, JSON.stringify(wines, null, 2), 'utf-8')
+  return allFuckingWines
 }
 
-const wines = await getWines(69) // 69 jaja
-writeWinesToFile(wines)
+const USWines = await getWinesPerCountryAndCurrency('US', 'USD')
+const allFuckingUSWinesIds = USWines.map(wine => wine.vintageId + '-' + wine.wineId)
+const allFuckingUSWinesIdsWithoutDuplicates = Array.from(new Set(allFuckingUSWinesIds))
+const allFuckingUSUniqueWines = allFuckingUSWinesIdsWithoutDuplicates.map(id => USWines.find(wine => wine.vintageId == id.split('-')[0] && wine.wineId == id.split('-')[1]))
+console.log(allFuckingUSUniqueWines.length)
+console.save(allFuckingUSUniqueWines)
+const spainWines = await getWinesPerCountryAndCurrency('ES', 'EUR')
+const allFuckingSpainWinesIds = spainWines.map(wine => wine.vintageId + '-' + wine.wineId)
+const allFuckingSpainWinesIdsWithoutDuplicates = Array.from(new Set(allFuckingSpainWinesIds))
+const allFuckingSpainUniqueWines = allFuckingSpainWinesIdsWithoutDuplicates.map(id => spainWines.find(wine => wine.vintageId == id.split('-')[0] && wine.wineId == id.split('-')[1]))
+console.log(allFuckingSpainUniqueWines.length)
+console.save(spainWines)
