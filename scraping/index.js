@@ -1,8 +1,12 @@
+const winesCount = [
+  // copy wines from db here
+]
+
 const PRICE_INCREMENT = 20
 
-const getWines = async (endingPage, countryCode, currency, wineType, grape, price) => {
+const getWinesWithFilters = async (numberOfPages, countryCode, currency, wineType, grape, price) => {
   const wines = []
-  for (let i = 1; i <= endingPage; i++) {
+  for (let i = 1; i <= numberOfPages; i++) {
     try {
       const url = `https://www.vivino.com/api/explore/explore?country_code=${countryCode}&currency_code=${currency}&min_rating=1&order_by=price&order=desc&price_range_max=${price + PRICE_INCREMENT}&price_range_min=${price}&wine_type_ids%5B%5D=${wineType}&grape_ids%5B%5D=${grape}&page=${i}&per_page=50&language=es`
       const winesPerPage = await fetch(url)
@@ -10,7 +14,7 @@ const getWines = async (endingPage, countryCode, currency, wineType, grape, pric
         .then(data => {
           console.log({
             page: i,
-            endingPage,
+            numberOfPages,
             countryCode,
             currency,
             wineType,
@@ -51,8 +55,7 @@ const getWines = async (endingPage, countryCode, currency, wineType, grape, pric
           intensity: wine?.vintage?.wine?.taste?.structure?.intensity,
           sweetness: wine?.vintage?.wine?.taste?.structure?.sweetness,
           tannin: wine?.vintage?.wine?.taste?.structure?.tannin,
-          userStructureCount: wine?.vintage?.wine?.taste?.structure?.calculated_structure_count,
-          pageFrom: i
+          userStructureCount: wine?.vintage?.wine?.taste?.structure?.calculated_structure_count
         }
       })
 
@@ -86,15 +89,13 @@ const getWines = async (endingPage, countryCode, currency, wineType, grape, pric
   }
 })(console)
 
-const getWinesPerCountryAndCurrency = async (countryCode, currency) => {
-  console.log({ countryCode, currency })
-  const allFuckingUniqueWines = []
+const getAllWines = async () => {
   const allFuckingWines = []
   const winesCountFilter = winesCount.filter(wine => wine.numberOfPages !== 0)
   const winesCountMini = winesCountFilter// .slice(0, 2)
   for (const wine of winesCountMini) {
     console.log(wine)
-    const moreWines = await getWines(wine.numberOfPages, countryCode, currency, wine.wineType, wine.grape, wine.price)
+    const moreWines = await getWinesWithFilters(wine.numberOfPages, wine.countryCode, wine.currency, wine.wineType, wine.grape, wine.price)
     allFuckingWines.push(...moreWines)
     console.log(allFuckingWines.length)
   }
@@ -102,15 +103,9 @@ const getWinesPerCountryAndCurrency = async (countryCode, currency) => {
   return allFuckingWines
 }
 
-const USWines = await getWinesPerCountryAndCurrency('US', 'USD')
-const allFuckingUSWinesIds = USWines.map(wine => wine.vintageId + '-' + wine.wineId)
-const allFuckingUSWinesIdsWithoutDuplicates = Array.from(new Set(allFuckingUSWinesIds))
-const allFuckingUSUniqueWines = allFuckingUSWinesIdsWithoutDuplicates.map(id => USWines.find(wine => wine.vintageId == id.split('-')[0] && wine.wineId == id.split('-')[1]))
-console.log(allFuckingUSUniqueWines.length)
-console.save(allFuckingUSUniqueWines)
-const spainWines = await getWinesPerCountryAndCurrency('ES', 'EUR')
-const allFuckingSpainWinesIds = spainWines.map(wine => wine.vintageId + '-' + wine.wineId)
-const allFuckingSpainWinesIdsWithoutDuplicates = Array.from(new Set(allFuckingSpainWinesIds))
-const allFuckingSpainUniqueWines = allFuckingSpainWinesIdsWithoutDuplicates.map(id => spainWines.find(wine => wine.vintageId == id.split('-')[0] && wine.wineId == id.split('-')[1]))
-console.log(allFuckingSpainUniqueWines.length)
-console.save(spainWines)
+const wines = await getAllWines()
+const allFuckingWinesIds = wines.map(wine => wine.vintageId + '-' + wine.wineId)
+const allFuckingWinesIdsWithoutDuplicates = Array.from(new Set(allFuckingWinesIds))
+const allFuckingUniqueWines = allFuckingWinesIdsWithoutDuplicates.map(id => wines.find(wine => wine.vintageId == id.split('-')[0] && wine.wineId == id.split('-')[1]))
+console.log(allFuckingUniqueWines.length)
+console.save(allFuckingUniqueWines)
