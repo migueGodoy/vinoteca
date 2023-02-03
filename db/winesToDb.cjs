@@ -1,6 +1,5 @@
 const mysql = require('mysql')
-const USWines = require('./data/US wines.json')
-const spainWines = require('./data/Spain wines.json')
+const wines = require('./data/wines.json')
 const dbConfig = require('./config/dbConnection.json')
 
 const connection = mysql.createConnection({
@@ -13,12 +12,7 @@ const connection = mysql.createConnection({
 connection.connect()
 
 const winesWithFlatTaste = []
-USWines.forEach(wine => {
-  const { grapes, pageFrom, ...restOfWine } = wine
-  winesWithFlatTaste.push(restOfWine)
-})
-
-spainWines.forEach(wine => {
+wines.forEach(wine => {
   const { grapes, pageFrom, ...restOfWine } = wine
   winesWithFlatTaste.push(restOfWine)
 })
@@ -28,3 +22,5 @@ winesWithFlatTaste.forEach(wine => {
     if (error) console.log(error)
   })
 })
+
+connection.end()
