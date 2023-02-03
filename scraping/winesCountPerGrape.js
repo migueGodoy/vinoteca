@@ -13,6 +13,7 @@ const getWines = async (countryCode, currency, wineType, grape, price) => {
         grape,
         countryCode,
         currency,
+        price,
         numberOfPages: Math.ceil(data.explore_vintage.records_matched / 50)
       }))
 
