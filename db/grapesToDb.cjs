@@ -33,3 +33,5 @@ grapesWithoutDuplicates.forEach(grape => {
     if (error) console.log(error)
   })
 })
+
+connection.end()
