@@ -1,6 +1,4 @@
-const winesCount = [
-  // copy wines from db here
-]
+import * as winesCount from '../db/data/winesCount.json'
 
 const PRICE_INCREMENT = 20
 
